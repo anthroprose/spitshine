@@ -9,7 +9,9 @@ Spitshine requires the use of Bootstrap 2.0's new control-group structure and sy
 	$(document).ready(function() {
 					
 		$('#form').spitshine();
-		$('#form').submit(function() { return $('#form').valid(); });
+		
+		// Optional
+		$('#form').submit(function() { return $('#form').spitshine('valid'); });
 		
 	});
 ```
@@ -22,6 +24,10 @@ Spitshine requires the use of Bootstrap 2.0's new control-group structure and sy
 				<span class="help-inline"></span>
 			</div>
 		</div>
+		
+		<!-- Optional -->
+		<input type="submit" name="submit" id="submit" value="submit" onsubmit="return $('#form').spitshine('valid');" />
+		
 	</form>	
 ```
 
