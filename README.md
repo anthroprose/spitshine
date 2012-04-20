@@ -37,6 +37,7 @@ Available Methods
 * spitshine (interface/driver method)
 
 	1) () - Null/Empty (Initialization/Constructor)
+	
 	2) ('valid') (returns true/false depending on entire form validation)
 
 Available Validation Classes
