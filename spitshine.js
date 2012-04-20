@@ -49,7 +49,8 @@
 			
 			var valid 		= true;
 			
-			if (selector === undefined) { selector = this; }
+			if (selector.target === undefined) { selector = this; }
+			else { selector = selector.target; }
 			
 			$($(selector).attr('class') !== undefined && $(selector).attr('class').split(' ')).each(function() {
 				 	
