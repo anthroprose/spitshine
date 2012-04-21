@@ -11,20 +11,24 @@
 			return $('#' + $(this).attr('id') + ' input').each(function() {
 				
 				var _this = this;
-								
-				$($(_this).attr('class').split(' ')).each(function() {
-				 	
-					if (this !== '') {
+						
+				if ($(_this).attr('class') !== undefined) {
 					
-						if (this.substring(0,6) === 'valid-') {
-							
-							$(_this).bind('focusout', methods.validate_field);
+					$($(_this).attr('class').split(' ')).each(function() {
+					 	
+						if (this !== '') {
+						
+							if (this.substring(0,6) === 'valid-') {
+								
+								$(_this).bind('focusout', methods.validate_field);
+								
+							}
 							
 						}
 						
-					}
-					
-				});
+					});
+				
+				}
 				
 				
 			});
@@ -58,9 +62,19 @@
 				
 					if (this.substring(0,6) === 'valid-') {
 						 
-						if (typeof methods[this.replace('-', '_')] === 'function') {
+						var funcname = this.replace(/-/g, '_');
+						if (funcname.substring(0,12) == 'valid_length') { funcname = 'valid_length'; }
 						
-							if (methods[this.replace('-', '_')](selector) === false) { errors = true; valid = false; };
+						if (typeof methods[funcname] === 'function') {
+						
+							var result = methods[funcname](selector);
+							
+							if (result === false) { 
+								
+								errors = true; 
+								valid = false;
+								 
+							}
 							
 						}
 												
@@ -70,7 +84,21 @@
 				
 			});
 			
-			if (valid === true) { errors = false; }
+			if (valid === true) { 
+				
+				errors = false;
+				$(selector).parent().parent().addClass('success');
+				$(selector).parent().parent().removeClass('error'); 
+				
+			}
+			else {
+			
+				$(selector).parent().parent().addClass('error');
+				$(selector).parent().parent().removeClass('success');
+				
+			}
+			
+			return this;
 			
 		},
 
@@ -78,15 +106,10 @@
 		 
 		 	var selector 	= $(field).parent().parent();
 		 
-			if ($(field).attr('type') === 'text' && $(field).val() === '') { selector.removeClass('success'); selector.addClass('error'); return false; }
-			else if ($(field).attr('type') === 'text' && $(field).val() !== '') { selector.removeClass('error'); selector.addClass('success'); }
-		 
-		 	if ($(field).attr('type') === 'select' && !$(field).is(':selected')) { selector.addClass('error'); return false; }
-			else if ($(field).attr('type') === 'select' && $(field).is(':selected')) { selector.removeClass('error'); selector.addClass('success'); }
-			
-			if ($(field).attr('type') === 'checkbox' && !$(field).is(':checked')) { selector.addClass('error'); return false; }
-			else if ($(field).attr('type') === 'checkbox' && $(field).is(':checked')) { selector.removeClass('error'); selector.addClass('success'); }
-		 
+			if ($(field).attr('type') === 'text' && $(field).val() === '') { return false; }
+		 	else if ($(field).attr('type') === 'select' && $(field).val() === '') { return false; }
+			else if ($(field).attr('type') === 'checkbox' && !$(field).attr('checked')) { return false; }
+		
 		},
 		
 		valid_email : function(field) {
@@ -94,52 +117,62 @@
 			var selector 	= $(field).parent().parent();
 			var regex 		= /\S+@\S+\.\S+/;
 			
-			if (!regex.test(jQuery.trim($(field).val()))) { selector.addClass('error'); selector.removeClass('success'); return false; }
-			else { selector.removeClass('error'); selector.addClass('success'); }
+			if (!regex.test(jQuery.trim($(field).val()))) { return false; }
 	
 		},
 		
-		valid_numeric : function() {
+		valid_phone : function(field) {
+
+			var selector 	= $(field).parent().parent();
+			var regex = /^\(?([2-9][0-8][0-9])\)?[-. ]?([2-9][0-9]{2})[-. ]?([0-9]{4})$/;
+			
+			if (!regex.test(jQuery.trim($(field).val()))) { return false; }
+						
+			
+		},
+			
+		valid_numeric : function(field) {
 			
 			var _this 		= this;
 			var selector 	= $(this).parent().parent();
-			var regex = /^[-]?[0-9]+[\.]?[0-9]+$/;
+			var regex 		= /^[-]?[0-9]+[\.]?[0-9]+$/;
 			
-			if (!regex.test(jQuery.trim($(this).val()))) { selector.addClass('error'); selector.removeClass('success'); return false; }
-			else { selector.removeClass('error'); selector.addClass('success'); }
+			if (!regex.test(jQuery.trim($(field).val()))) { return false; }
 			
 		},
 		
-		valid_alpha : function() {
+		valid_alpha : function(field) {
 			
 			var _this 		= this;
 			var selector 	= $(this).parent().parent();
 			var regex 		= /^[a-zA-Z]+$/;
 			
-			if (!regex.test(jQuery.trim($(this).val()))) { selector.addClass('error'); selector.removeClass('success'); return false; }
-			else { selector.removeClass('error'); selector.addClass('success'); }
+			if (!regex.test(jQuery.trim($(field).val()))) { return false; }
 			
 		},
 		
-		valid_length : function() {
+		valid_length : function(field) {
 			
 			var _this 		= this;
 			var selector 	= $(this).parent().parent();
+
+			var return_val;
 			
-			$($(this).attr('class').split(' ')).each(function() {
+			$($(field).attr('class').split(' ')).each(function() {
 				 
 				if (this !== '') {
-					
+
 					if (this.substring(0,13) == 'valid-length-') {
 						
-						if (jQuery.trim($(this).val()).length !== this.substring(13)) { selector.addClass('error'); selector.removeClass('success'); return false; }
-						else { selector.removeClass('error'); selector.addClass('success'); }
+						if (jQuery.trim($(field).val()).length !== parseInt(this.substring(13))) { return_val = false; }
 						
 					}
 					
 				}
 				
     		});
+			
+			return return_val;
 			
 		}
 		
