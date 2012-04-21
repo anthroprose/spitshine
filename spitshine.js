@@ -1,3 +1,10 @@
+/*
+ * Spitshine v.02
+ * 
+ * Validation for Twitter's Bootstrap Framework
+ * 
+ */
+
 !function( $ ){
 
 	"use strict"
