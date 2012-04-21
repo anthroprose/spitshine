@@ -5,7 +5,7 @@
  * 
  */
 
-!function( $ ){
+!function($){
 
 	"use strict"
 
@@ -124,7 +124,8 @@
 			var selector 	= $(field).parent().parent();
 			var regex 		= /\S+@\S+\.\S+/;
 			
-			if (!regex.test(jQuery.trim($(field).val()))) { return false; }
+			
+			if (jQuery.trim($(field).val()).length > 0 && !regex.test(jQuery.trim($(field).val()))) { return false; }
 	
 		},
 		
@@ -133,7 +134,7 @@
 			var selector 	= $(field).parent().parent();
 			var regex = /^\(?([2-9][0-8][0-9])\)?[-. ]?([2-9][0-9]{2})[-. ]?([0-9]{4})$/;
 			
-			if (!regex.test(jQuery.trim($(field).val()))) { return false; }
+			if (jQuery.trim($(field).val()).length > 0 && !regex.test(jQuery.trim($(field).val()))) { return false; }
 						
 			
 		},
@@ -144,7 +145,7 @@
 			var selector 	= $(this).parent().parent();
 			var regex 		= /^[-]?[0-9]+[\.]?[0-9]+$/;
 			
-			if (!regex.test(jQuery.trim($(field).val()))) { return false; }
+			if (jQuery.trim($(field).val()).length > 0 && !regex.test(jQuery.trim($(field).val()))) { return false; }
 			
 		},
 		
@@ -154,7 +155,7 @@
 			var selector 	= $(this).parent().parent();
 			var regex 		= /^[a-zA-Z]+$/;
 			
-			if (!regex.test(jQuery.trim($(field).val()))) { return false; }
+			if (jQuery.trim($(field).val()).length > 0 && !regex.test(jQuery.trim($(field).val()))) { return false; }
 			
 		},
 		
@@ -162,21 +163,16 @@
 			
 			var _this 		= this;
 			var selector 	= $(this).parent().parent();
-
 			var return_val;
 			
 			$($(field).attr('class').split(' ')).each(function() {
 				 
-				if (this !== '') {
-
-					if (this.substring(0,13) == 'valid-length-') {
+				if (this !== '' && this.substring(0,13) == 'valid-length-') {
 						
-						if (jQuery.trim($(field).val()).length !== parseInt(this.substring(13))) { return_val = false; }
+					if (jQuery.trim($(field).val()).length !== parseInt(this.substring(13))) { return_val = false; }
 						
-					}
-					
 				}
-				
+					
     		});
 			
 			return return_val;
@@ -184,6 +180,7 @@
 		}
 		
   	};
+  
   
 	$.fn.spitshine = function(method) {
   
