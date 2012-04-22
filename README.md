@@ -10,9 +10,20 @@ Spitshine requires the use of Bootstrap 2.0's new control-group structure and sy
 					
 		$('#form').spitshine();
 		
-		// Optional
-		$('#form').submit(function() { return $('#form').spitshine('valid'); });
+		// Custom method, useful for AJAX and other more comples validators, or just inserting your function.
+		$('#form').spitshine('method','required', function(selector) { if ($(selector).val() == '') { return false; }});
 		
+		// Don't use Bootstrap? Override the internal class functions to use with your own DOM structures.
+		$('#form').spitshine('method','field_error', function (selector) {
+			
+			$(selector).parent().parent().addClass('error');
+			$(selector).parent().parent().removeClass('success');
+				
+		});
+
+		//Optional
+		$('#submit').bind('click', function() { return $('#form').spitshine('valid'); });
+
 	});
 ```
 
@@ -20,13 +31,13 @@ Spitshine requires the use of Bootstrap 2.0's new control-group structure and sy
 	<form id="form">
 		<div class="control-group">
 			<div class="input">
-				<input class="valid-required valid-email" id="email" name="email" type="text" />
+				<input class="valid-required valid-email valid-custom-required" id="email" name="email" type="text" />
 				<span class="help-inline"></span>
 			</div>
 		</div>
 		
 		<!-- Optional -->
-		<input type="submit" name="submit" id="submit" value="submit" onsubmit="return $('#form').spitshine('valid');" />
+		<input type="submit" name="submit" id="submit" value="submit" onclick="return $('#form').spitshine('valid');" />
 		
 	</form>	
 ```
@@ -36,10 +47,13 @@ Available Methods
 
 * spitshine (interface/driver method)
 
-	1) () - Null/Empty (Initialization/Constructor)
+	1) () - (Initialization/Constructor)
 	
-	2) ('valid') (returns true/false depending on entire form validation)
+	2) ('valid') - (returns true/false depending on entire form validation)
 
+	3) ('method', (method name), (function)) - Add a custom method to the mix, or use to override the selector/class functions 
+	
+	
 Available Validation Classes
 -------------------------
 
@@ -66,3 +80,7 @@ Available Validation Classes
 * valid-length-(n)
 
 	1) Validates exact length (valid-length-5 for zipcodes)
+
+* valid-custom-(function)
+
+	1) Calls custom (function) that was added, is passed the current selector
