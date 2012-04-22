@@ -77,6 +77,11 @@ Available Validation Classes
 
 	1) Checks for alphabetic only entry
 
+* valid-phone
+
+	1) Checks common digit structure and formatting
+	2) Also checks for exclusion list of prefixes and exchanges
+
 * valid-length-(n)
 
 	1) Validates exact length (valid-length-5 for zipcodes)
