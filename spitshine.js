@@ -1,5 +1,5 @@
 /*
- * Spitshine v.02
+ * Spitshine v.03
  * 
  * Validation for Twitter's Bootstrap Framework
  * 
@@ -23,13 +23,9 @@
 					
 					$($(_this).attr('class').split(' ')).each(function() {
 					 	
-						if (this !== '') {
-						
-							if (this.substring(0,6) === 'valid-') {
+						if (this !== '' && this.substring(0,6) === 'valid-') {
 								
-								$(_this).bind('focusout', methods.validate_field);
-								
-							}
+							$(_this).bind('focusout', methods.validate_field);
 							
 						}
 						
@@ -37,22 +33,29 @@
 				
 				}
 				
-				
 			});
 
 		},
 		
-		destroy : function() {},
-		
-		valid : function(opts) {
+		valid : function() {
 			
-			$('#' + $(this).attr('id') + ' input').each(function() {
-				 
-				methods.validate_field(this); 
-				
-			});
+			$('#' + $(this).attr('id') + ' input').each(function() { methods.validate_field(this); });
 			
 			return !errors;
+			
+		},
+		
+		field_error : function (selector) {
+			
+			$(selector).parent().parent().addClass('error');
+			$(selector).parent().parent().removeClass('success');
+				
+		},
+		
+		field_success : function (selector) {
+			
+			$(selector).parent().parent().removeClass('error');
+			$(selector).parent().parent().addClass('success');
 			
 		},
 		
@@ -60,50 +63,31 @@
 			
 			var valid 		= true;
 			
-			if (selector.target === undefined) { selector = this; }
-			else { selector = selector.target; }
+			if (selector.target !== undefined) { selector = selector.target; }
 			
 			$($(selector).attr('class') !== undefined && $(selector).attr('class').split(' ')).each(function() {
 				 	
-				if (valid === true && this !== '') {
-				
-					if (this.substring(0,6) === 'valid-') {
-						 
-						var funcname = this.replace(/-/g, '_');
-						if (funcname.substring(0,12) == 'valid_length') { funcname = 'valid_length'; }
+				if (valid === true && this !== '' && this.substring(0,6) === 'valid-') {
+
+					var funcname = this.replace(/-/g, '_');
+					
+					if (funcname.substring(0,12) == 'valid_length') { funcname = 'valid_length'; }
+					else if (funcname.substring(0,12) == 'valid_custom') {  funcname = funcname.substring(13); }
+					
+					if (typeof methods[funcname] === 'function') {
+					
+						var result = methods[funcname](selector);
 						
-						if (typeof methods[funcname] === 'function') {
+						if (result === false) { errors = true; valid = false; }
 						
-							var result = methods[funcname](selector);
-							
-							if (result === false) { 
-								
-								errors = true; 
-								valid = false;
-								 
-							}
-							
-						}
-												
 					}
 					
 				}
 				
 			});
 			
-			if (valid === true) { 
-				
-				errors = false;
-				$(selector).parent().parent().addClass('success');
-				$(selector).parent().parent().removeClass('error'); 
-				
-			}
-			else {
-			
-				$(selector).parent().parent().addClass('error');
-				$(selector).parent().parent().removeClass('success');
-				
-			}
+			if (valid === true) { errors = false; methods['field_success'](selector);  }
+			else { methods['field_error'](selector); }
 			
 			return this;
 			
@@ -124,7 +108,6 @@
 			var selector 	= $(field).parent().parent();
 			var regex 		= /\S+@\S+\.\S+/;
 			
-			
 			if (jQuery.trim($(field).val()).length > 0 && !regex.test(jQuery.trim($(field).val()))) { return false; }
 	
 		},
@@ -135,8 +118,7 @@
 			var regex = /^\(?([2-9][0-8][0-9])\)?[-. ]?([2-9][0-9]{2})[-. ]?([0-9]{4})$/;
 			
 			if (jQuery.trim($(field).val()).length > 0 && !regex.test(jQuery.trim($(field).val()))) { return false; }
-						
-			
+
 		},
 			
 		valid_numeric : function(field) {
@@ -167,25 +149,23 @@
 			
 			$($(field).attr('class').split(' ')).each(function() {
 				 
-				if (this !== '' && this.substring(0,13) == 'valid-length-') {
-						
-					if (jQuery.trim($(field).val()).length !== parseInt(this.substring(13))) { return_val = false; }
-						
-				}
+				if (this !== '' && this.substring(0,13) == 'valid-length-' && jQuery.trim($(field).val()).length !== parseInt(this.substring(13))) { return_val = false; }
 					
     		});
 			
 			return return_val;
 			
-		}
+		},
+		
+		method : function (name, func) { methods[name] = func; } 
 		
   	};
   
   
 	$.fn.spitshine = function(method) {
-  
+
 		if (methods[method]) {
-			
+	
 			return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
 			
 		} else if (typeof method === 'object' || !method) {
