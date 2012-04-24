@@ -61,9 +61,9 @@ Available Validation Classes
 
 	1) Checks input type=text for val() === ''
 	
-	2) Checks input type=checkbox for is:checked
+	2) Checks input type=checkbox for val() === ''
 	
-	3) Checks input type=select for is:selected
+	3) Checks input type=select for attr('checked')
 	
 * valid-email
 
@@ -80,6 +80,7 @@ Available Validation Classes
 * valid-phone
 
 	1) Checks common digit structure and formatting
+	
 	2) Also checks for exclusion list of prefixes and exchanges
 
 * valid-length-(n)
