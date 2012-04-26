@@ -15,7 +15,7 @@
 		
 		init : function(options) {
 			
-			return $('#' + $(this).attr('id') + ' input').each(function() {
+			$('#' + $(this).attr('id') + ' input, #' + $(this).attr('id') + ' select, #' + $(this).attr('id') + ' input:checkbox').each(function() {
 				
 				var _this = this;
 						
@@ -39,7 +39,7 @@
 		
 		valid : function() {
 			
-			$('#' + $(this).attr('id') + ' input').each(function() { methods.validate_field(this); });
+			$('#' + $(this).attr('id') + ' input, #' + $(this).attr('id') + ' select, #' + $(this).attr('id') + ' input:checkbox').each(function() { methods.validate_field(this); });
 			
 			return !errors;
 			
@@ -47,15 +47,15 @@
 		
 		field_error : function (selector) {
 			
-			$(selector).parent().parent().addClass('error');
-			$(selector).parent().parent().removeClass('success');
-				
+			$(selector).closest('.control-group').addClass('error');
+			$(selector).closest('.control-group').removeClass('success');
+			
 		},
 		
 		field_success : function (selector) {
 			
-			$(selector).parent().parent().removeClass('error');
-			$(selector).parent().parent().addClass('success');
+			$(selector).closest('.control-group').removeClass('error');
+			$(selector).closest('.control-group').addClass('success');
 			
 		},
 		
@@ -86,7 +86,7 @@
 				
 			});
 			
-			if (valid === true) { errors = false; methods['field_success'](selector);  }
+			if (valid === true) { methods['field_success'](selector);  }
 			else { methods['field_error'](selector); }
 			
 			return this;
@@ -96,10 +96,10 @@
 		valid_required : function(field) { 
 		 
 		 	var selector 	= $(field).parent().parent();
-		 
+		 	
 			if ($(field).attr('type') === 'text' && $(field).val() === '') { return false; }
-		 	else if ($(field).attr('type') === 'select' && $(field).val() === '') { return false; }
-			else if ($(field).attr('type') === 'checkbox' && !$(field).attr('checked')) { return false; }
+		 	else if ($(field).is('select') && $(field).val() === '') { return false; }
+			else if ($(field).attr('type') === 'checkbox' && !$(field).is(':checked')) { return false; }
 		
 		},
 		
