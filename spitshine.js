@@ -1,5 +1,5 @@
 /*
- * Spitshine v.03
+ * Spitshine v.04
  * 
  * Validation for Twitter's Bootstrap Framework
  * 
@@ -39,6 +39,7 @@
 		
 		valid : function() {
 			
+			errors = false;
 			$('#' + $(this).attr('id') + ' input, #' + $(this).attr('id') + ' select, #' + $(this).attr('id') + ' input:checkbox').each(function() { methods.validate_field(this); });
 			
 			return !errors;
@@ -78,7 +79,11 @@
 					
 						var result = methods[funcname](selector);
 						
-						if (result === false) { errors = true; valid = false; }
+						if (result === false) {
+							
+							errors = true; valid = false;
+							 
+						}
 						
 					}
 					
