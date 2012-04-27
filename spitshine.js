@@ -24,7 +24,7 @@
 					$($(_this).attr('class').split(' ')).each(function() {
 					 	
 						if (this !== '' && this.substring(0,6) === 'valid-') {
-								
+							
 							$(_this).bind('focusout', methods.validate_field);
 							
 						}
@@ -94,18 +94,16 @@
 		},
 
 		valid_required : function(field) { 
-		 
-		 	var selector 	= $(field).parent().parent();
-		 	
+		 		 
 			if ($(field).attr('type') === 'text' && $(field).val() === '') { return false; }
 		 	else if ($(field).is('select') && $(field).val() === '') { return false; }
 			else if ($(field).attr('type') === 'checkbox' && !$(field).is(':checked')) { return false; }
+			else if ($(field).attr('type') === 'radio' && $('#' + $(field).parents('form:first').attr('id') + ' input[name=' + $(field).attr('name') + ']:checked').val() == undefined) { return false; }
 		
 		},
 		
 		valid_email : function(field) {
 		 	
-			var selector 	= $(field).parent().parent();
 			var regex 		= /\S+@\S+\.\S+/;
 			
 			if (jQuery.trim($(field).val()).length > 0 && !regex.test(jQuery.trim($(field).val()))) { return false; }
@@ -114,7 +112,6 @@
 		
 		valid_phone : function(field) {
 
-			var selector 	= $(field).parent().parent();
 			var regex = /^\(?([2-9][0-8][0-9])\)?[-. ]?([2-9][0-9]{2})[-. ]?([0-9]{4})$/;
 			
 			if (jQuery.trim($(field).val()).length > 0 && !regex.test(jQuery.trim($(field).val()))) { return false; }
@@ -123,8 +120,6 @@
 			
 		valid_numeric : function(field) {
 			
-			var _this 		= this;
-			var selector 	= $(this).parent().parent();
 			var regex 		= /^[-]?[0-9]+[\.]?[0-9]+$/;
 			
 			if (jQuery.trim($(field).val()).length > 0 && !regex.test(jQuery.trim($(field).val()))) { return false; }
@@ -133,8 +128,6 @@
 		
 		valid_alpha : function(field) {
 			
-			var _this 		= this;
-			var selector 	= $(this).parent().parent();
 			var regex 		= /^[a-zA-Z]+$/;
 			
 			if (jQuery.trim($(field).val()).length > 0 && !regex.test(jQuery.trim($(field).val()))) { return false; }
@@ -143,8 +136,6 @@
 		
 		valid_length : function(field) {
 			
-			var _this 		= this;
-			var selector 	= $(this).parent().parent();
 			var return_val;
 			
 			$($(field).attr('class').split(' ')).each(function() {
