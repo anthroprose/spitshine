@@ -73,6 +73,7 @@
 					var funcname = this.replace(/-/g, '_');
 					
 					if (funcname.substring(0,12) == 'valid_length') { funcname = 'valid_length'; }
+					if (funcname.substring(0,15) == 'valid_maxlength') { funcname = 'valid_maxlength'; }
 					else if (funcname.substring(0,12) == 'valid_custom') {  funcname = funcname.substring(13); }
 					
 					if (typeof methods[funcname] === 'function') {
@@ -150,6 +151,28 @@
     		});
 			
 			return return_val;
+			
+		},
+		
+		valid_maxlength : function(field) {
+			
+			var return_val;
+			
+			$($(field).attr('class').split(' ')).each(function() {
+				 
+				if (this !== '' && this.substring(0,16) == 'valid-maxlength-' && jQuery.trim($(field).val()).length > parseInt(this.substring(16))) { return_val = false; }
+					
+    		});
+			
+			return return_val;
+			
+		},
+		
+		valid_nospace : function(field) {
+			
+			var regex 		= /^[\S]+$/;
+			
+			if (jQuery.trim($(field).val()).length > 0 && !regex.test(jQuery.trim($(field).val()))) { return false; }
 			
 		},
 		

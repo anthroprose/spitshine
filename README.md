@@ -86,6 +86,10 @@ Available Validation Classes
 * valid-length-(n)
 
 	1) Validates exact length (valid-length-5 for zipcodes)
+	
+* valid-max-length-(n)
+
+	1) Validates a max length
 
 * valid-custom-(function)
 
